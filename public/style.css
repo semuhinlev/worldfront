@@ -1,0 +1,50 @@
+body {
+  margin: 0;
+  background: #0a0f1f;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+}
+h1 { text-align: center; }
+#ui { text-align: center; padding: 10px; background: #121a2f; }
+#game {
+  display: block;
+  margin: 10px auto;
+  border: 1px solid #334;
+  background: #0d152a;
+}
+#chat-box {
+  width: 80%;
+  max-width: 800px;
+  margin: 20px auto;
+  background: #121a2f;
+  padding: 10px;
+  border-radius: 8px;
+}
+#chat {
+  height: 120px;
+  overflow-y: auto;
+  background: #0c1220;
+  padding: 8px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+#chat-input {
+  width: 70%;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #445;
+}
+button {
+  background: #4a6cf7;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0 4px;
+}
+button:hover { background: #5a7cff; }
+@media (max-width: 768px) {
+  #game { width: 95vw; height: auto; }
+  #chat-input { width: 60%; }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "worldfront",
+  "version": "1.0.0",
+  "description": "Кооп стратегия захвата мира",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "engines": {
+    "node": ">=18.18.0 <23.0.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2"
+  }
+}

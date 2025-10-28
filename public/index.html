@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WorldFront</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>🌍 WorldFront — Кооп стратегия</h1>
+  <div id="ui">
+    <div id="resources">Загрузка...</div>
+    <div id="tech-panel" style="margin: 10px 0;">
+      <button onclick="research('basic_logistics')">Исследовать: Логистика</button>
+    </div>
+    <div>Кликните по региону → выберите цель для атаки</div>
+  </div>
+
+  <canvas id="game" width="800" height="500"></canvas>
+
+  <div id="chat-box">
+    <div id="chat"></div>
+    <input id="chat-input" placeholder="Сообщение команде..." onkeypress="if(event.key==='Enter') sendChat()">
+    <button onclick="sendChat()">Отправить</button>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="client.js"></script>
+</body>
+</html>
