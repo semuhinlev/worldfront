@@ -10,6 +10,12 @@ class GameState {
     this.tech = {};
     this.winner = null;
 
+    // Инициализируем ресурсы и технологии для ВСЕХ команд заранее
+    for (const team of Object.keys(this.teams)) {
+      this.resources[team] = { food: 0, metal: 0, energy: 0 };
+      this.tech[team] = { unlocks: [] };
+    }
+
     for (const id in worldMap) {
       this.regions[id] = {
         id,
@@ -26,6 +32,8 @@ class GameState {
         const team = teamNames[i];
         this.regions[id].owner = team;
         this.regions[id].troops = 15;
+        // Стартовые ресурсы только для стартовых команд
+        this.resources[team] = { food: 30, metal: 30, energy: 30 };
       }
     });
 
@@ -38,14 +46,25 @@ class GameState {
     );
     this.teams[smallestTeam].push(playerId);
     this.players[playerId] = { team: smallestTeam };
-    this.resources[smallestTeam] = { food: 30, metal: 30, energy: 30 };
-    this.tech[smallestTeam] = { unlocks: [] };
+    // Убедимся, что ресурсы есть (на случай, если ИИ уже создал запись)
+    if (!this.resources[smallestTeam]) {
+      this.resources[smallestTeam] = { food: 30, metal: 30, energy: 30 };
+    }
     return smallestTeam;
   }
 
   collectResources() {
     for (const team in this.teams) {
-      if (this.teams[team].length === 0) continue;
+      // Пропускаем команды, у которых нет регионов и нет игроков/ИИ
+      const hasActivity = this.teams[team].length > 0 || 
+                          Object.values(this.regions).some(r => r.owner === team);
+      if (!hasActivity) continue;
+
+      // Гарантируем, что ресурсы существуют
+      if (!this.resources[team]) {
+        this.resources[team] = { food: 0, metal: 0, energy: 0 };
+      }
+
       let food = 0, metal = 0, energy = 0;
       for (const r of Object.values(this.regions)) {
         if (r.owner === team) {
@@ -94,6 +113,7 @@ class GameState {
   research(team, techKey) {
     const tech = techTree[techKey];
     if (!tech) return false;
+    if (!this.tech[team]) this.tech[team] = { unlocks: [] };
     this.tech[team].unlocks.push(techKey);
     return true;
   }
@@ -112,8 +132,17 @@ class GameState {
 
   runAI() {
     for (const team of ['red', 'blue', 'green', 'yellow']) {
-      if (this.teams[team].length > 0) continue;
-      if (!this.teams[team].includes('AI')) this.teams[team].push('AI');
+      // Если в команде есть игроки — ИИ не нужен
+      if (this.teams[team].some(id => id !== 'AI')) continue;
+
+      // Если ИИ ещё не добавлен — добавляем
+      if (!this.teams[team].includes('AI')) {
+        this.teams[team].push('AI');
+        // Инициализируем ресурсы, если их нет
+        if (!this.resources[team]) {
+          this.resources[team] = { food: 20, metal: 20, energy: 20 };
+        }
+      }
 
       const owned = Object.keys(this.regions).filter(id => this.regions[id].owner === team);
       if (owned.length === 0) continue;
